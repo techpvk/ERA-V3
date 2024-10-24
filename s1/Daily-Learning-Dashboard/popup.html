@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Daily Learning Dashboard</title>
+  <style>
+    body {
+      width: 300px;
+      padding: 10px;
+      font-family: Arial, sans-serif;
+    }
+    input, textarea, button {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Save Webpage</h2>
+  <input type="text" id="url" placeholder="URL (auto-filled)" readonly>
+  <textarea id="description" placeholder="Short description"></textarea>
+  <input type="text" id="tags" placeholder="Add tags (comma-separated)">
+  <button id="saveWebpage">Save Webpage</button>
+  <hr>
+  <button id="openDashboard">Open Dashboard</button>
+  <script src="popup.js"></script>
+</body>
+</html>

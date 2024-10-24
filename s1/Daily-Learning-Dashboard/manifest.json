@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "Daily Learning Dashboard",
+  "version": "1.0",
+  "description": "Save and track your daily learning progress",
+  "permissions": ["storage", "activeTab", "contextMenus"],
+  "host_permissions": ["https://github.com/*", "https://www.linkedin.com/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>", "https://github.com/*", "https://www.linkedin.com/*"],
+      "js": ["content.js"]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["selection_popup.html"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

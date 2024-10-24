@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Save Selected Text</title>
+  <style>
+    body {
+      width: 300px;
+      padding: 10px;
+      font-family: Arial, sans-serif;
+    }
+    textarea, input, button {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Save Selected Text</h2>
+  <textarea id="selectedText" rows="4" readonly></textarea>
+  <textarea id="description" placeholder="Add a short description" rows="3"></textarea>
+  <input type="text" id="tags" placeholder="Add tags (comma-separated)">
+  <button id="saveSelection">Save Selection</button>
+  <script src="selection_popup.js"></script>
+</body>
+</html>
