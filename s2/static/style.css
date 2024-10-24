@@ -1,0 +1,121 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #b3e5fc, #e1f5fe); /* Light blue/sky color gradient */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    animation: backgroundAnimation 10s infinite alternate;
+}
+
+@keyframes backgroundAnimation {
+    0% { background: linear-gradient(135deg, #b3e5fc, #e1f5fe); }
+    100% { background: linear-gradient(135deg, #e1f5fe, #b3e5fc); }
+}
+
+.wrapper {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.container {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 30px;
+    width: 350px;
+    text-align: center;
+    transition: transform 0.3s, border-color 0.3s;
+    border: 2px solid transparent; /* Default border */
+    animation: containerAnimation 1s ease-in-out;
+}
+
+@keyframes containerAnimation {
+    0% { transform: scale(0.9); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.container:hover {
+    transform: translateY(-5px) scale(1.05);
+}
+
+.container:focus-within {
+    border-color: #007bff; /* Border color on focus */
+}
+
+h2 {
+    color: #343a40;
+    margin-bottom: 20px;
+    animation: fadeIn 2s;
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+input[type="radio"] {
+    margin: 10px 5px;
+    vertical-align: middle; /* Align radio buttons inline */
+    transition: transform 0.2s;
+}
+
+input[type="radio"]:hover {
+    transform: scale(1.2);
+}
+
+label {
+    margin-right: 15px;
+    vertical-align: middle;
+}
+
+img {
+    margin-top: 15px;
+    border-radius: 10px;
+    max-width: 100%;
+    height: auto;
+    display: none;
+    margin-left: auto;
+    margin-right: auto;
+    animation: fadeIn 1s;
+}
+
+button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s, transform 0.3s;
+    margin-top: 15px;
+    animation: buttonAnimation 1s ease-in-out;
+}
+
+@keyframes buttonAnimation {
+    0% { transform: translateY(10px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+
+button:hover {
+    background-color: #218838;
+    transform: translateY(-2px) scale(1.1);
+}
+
+#file-info {
+    margin-top: 15px;
+    color: #495057;
+    font-size: 15px;
+    text-align: left;
+    line-height: 1.6;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 1s;
+}
