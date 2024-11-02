@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Modal Content Processor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Multi-Modal Content Processor</h1>
+        
+        <div class="input-selection">
+            <h2>Select Input Type</h2>
+            <div class="input-options">
+                <div class="option" onclick="selectInputType('text')">
+                    <i class="fas fa-align-left"></i>
+                    <span>Text</span>
+                </div>
+                <div class="option" onclick="selectInputType('image')">
+                    <i class="fas fa-camera"></i>
+                    <span>Image</span>
+                </div>
+                <div class="option" onclick="selectInputType('audio')">
+                    <i class="fas fa-microphone-alt"></i>
+                    <span>Audio</span>
+                </div>
+                <div class="option" onclick="selectInputType('3d')">
+                    <i class="fas fa-cube"></i>
+                    <span>3D Model</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="inputForm" class="input-form hidden">
+            <h2>Upload Content</h2>
+            <form id="contentForm" enctype="multipart/form-data">
+                <div id="uploadSection"></div>
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-upload"></i> Process Content
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html> 
