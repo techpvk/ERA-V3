@@ -32,8 +32,31 @@ body::before {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(10, 25, 47, 0.85);
+    background: linear-gradient(
+        45deg,
+        rgba(10, 25, 47, 0.97),
+        rgba(17, 34, 64, 0.95)
+    );
     z-index: -1;
+}
+
+.neural-network-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('/static/neural-pattern.png');
+    background-size: cover;
+    opacity: 0.05;
+    z-index: -1;
+    animation: pulse 4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.03; }
+    50% { opacity: 0.07; }
+    100% { opacity: 0.03; }
 }
 
 .container {
@@ -43,17 +66,24 @@ body::before {
 }
 
 .header {
-    background-color: var(--bg-secondary);
+    background: linear-gradient(
+        90deg,
+        rgba(17, 34, 64, 0.98),
+        rgba(10, 25, 47, 0.95)
+    );
     padding: 2rem 0;
     margin-bottom: 2rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    border-bottom: 1px solid rgba(100, 255, 218, 0.1);
 }
 
 .title {
     font-size: 2.5rem;
     font-weight: 700;
+    background: linear-gradient(45deg, var(--accent), #00b4d8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     margin-bottom: 0.5rem;
-    color: var(--accent);
 }
 
 .subtitle {
@@ -305,10 +335,16 @@ body::before {
 }
 
 .config-card {
-    background-color: var(--bg-secondary);
+    background: linear-gradient(
+        145deg,
+        rgba(17, 34, 64, 0.95),
+        rgba(10, 25, 47, 0.98)
+    );
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(100, 255, 218, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     padding: 1.5rem;
     border-radius: 8px;
-    border: 1px solid rgba(100, 255, 218, 0.1);
     transition: all 0.3s ease;
 }
 
@@ -555,9 +591,13 @@ body::before {
 
 /* Add styles for active (running) model card */
 .config-card.running {
-    background: linear-gradient(145deg, rgba(42, 157, 143, 0.1), rgba(100, 255, 218, 0.05));
+    background: linear-gradient(
+        145deg,
+        rgba(42, 157, 143, 0.1),
+        rgba(100, 255, 218, 0.05)
+    );
     border: 1px solid rgba(100, 255, 218, 0.3);
-    box-shadow: 0 0 20px rgba(100, 255, 218, 0.1);
+    box-shadow: 0 0 30px rgba(100, 255, 218, 0.15);
     transform: translateY(-5px);
 }
 
