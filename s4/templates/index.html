@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural Network Training Monitor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Fira+Code&display=swap" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1 class="title">Neural Network Training Monitor</h1>
+            <p class="subtitle">Real-time MNIST Classification Training Visualization</p>
+            <div class="status">Training in Progress</div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-label">Current Epoch</div>
+                <div class="metric-value" id="current-epoch">0</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Training Loss</div>
+                <div class="metric-value" id="current-loss">0.000</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Accuracy</div>
+                <div class="metric-value" id="current-accuracy">0%</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">Loss Curve</h2>
+            <div id="loss-plot" class="plot"></div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">Accuracy Curve</h2>
+            <div id="accuracy-plot" class="plot"></div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">Training Log</h2>
+            <div id="training-log"></div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">Model Predictions</h2>
+            <img id="result-image" style="display: none;">
+        </div>
+    </main>
+
+    <script>
+        let lossData = {x: [], y: []};
+        let accuracyData = {x: [], y: []};
+
+        const plotLayout = {
+            paper_bgcolor: 'rgba(0,0,0,0)',
+            plot_bgcolor: 'rgba(0,0,0,0)',
+            font: { color: '#ccd6f6' },
+            margin: { l: 50, r: 20, t: 30, b: 40 },
+            xaxis: {
+                gridcolor: 'rgba(204, 214, 246, 0.1)',
+                zerolinecolor: 'rgba(204, 214, 246, 0.1)',
+                title: 'Iteration'
+            },
+            yaxis: {
+                gridcolor: 'rgba(204, 214, 246, 0.1)',
+                zerolinecolor: 'rgba(204, 214, 246, 0.1)'
+            }
+        };
+
+        function updatePlots() {
+            $.getJSON('/get_metrics', function(data) {
+                lossData = data.loss;
+                accuracyData = data.accuracy;
+                
+                if (accuracyData.y.length > 0) {
+                    $('#current-accuracy').text(accuracyData.y[accuracyData.y.length - 1].toFixed(2) + '%');
+                    $('#current-loss').text(lossData.y[lossData.y.length - 1].toFixed(4));
+                    $('#current-epoch').text(Math.floor(accuracyData.x[accuracyData.x.length - 1] / 100));
+                }
+
+                Plotly.newPlot('loss-plot', [{
+                    x: lossData.x,
+                    y: lossData.y,
+                    type: 'scatter',
+                    name: 'Training Loss',
+                    line: { color: '#64ffda', width: 2 }
+                }], plotLayout);
+
+                Plotly.newPlot('accuracy-plot', [{
+                    x: accuracyData.x,
+                    y: accuracyData.y,
+                    type: 'scatter',
+                    name: 'Training Accuracy',
+                    line: { color: '#64ffda', width: 2 }
+                }], plotLayout);
+            });
+
+            $.get('/static/results.png')
+                .done(function() {
+                    $('#result-image').attr('src', '/static/results.png?' + new Date().getTime())
+                                    .show();
+                });
+        }
+
+        function updateLog() {
+            $.getJSON('/get_log', function(data) {
+                const logHtml = data.log.map(msg => 
+                    `<div class="log-entry">${msg}</div>`
+                ).join('');
+                $('#training-log').html(logHtml);
+                $('#training-log').scrollTop($('#training-log')[0].scrollHeight);
+            });
+        }
+
+        setInterval(updatePlots, 1000);
+        setInterval(updateLog, 1000);
+    </script>
+</body>
+</html>
+    
