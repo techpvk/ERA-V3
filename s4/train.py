@@ -66,11 +66,16 @@ class CNN(nn.Module):
         x = self.fc(x)
         return x
 
-def update_server(iteration, loss, accuracy, message):
+def update_server(iteration, loss, accuracy, message, is_validation=False):
     """Send updates to Flask server"""
     try:
         requests.post('http://localhost:5000/update_metrics', 
-                     json={'iteration': iteration, 'loss': loss, 'accuracy': accuracy})
+                     json={
+                         'iteration': iteration,
+                         'loss': loss,
+                         'accuracy': accuracy,
+                         'is_validation': is_validation
+                     })
         requests.post('http://localhost:5000/update_log',
                      json={'message': message})
     except:
@@ -112,7 +117,14 @@ def train():
     # Training loop
     num_epochs = 1
     best_accuracy = 0
+    best_loss = float('inf')
     global_step = 0
+    
+    # Lists to store metrics for plotting
+    train_losses = []
+    train_accuracies = []
+    val_losses = []
+    val_accuracies = []
     
     for epoch in range(num_epochs):
         model.train()
@@ -121,42 +133,57 @@ def train():
         total = 0
         epoch_start = time.time()
         
-        # Use tqdm for the training loop
+        # Reset metrics at start of epoch
+        batch_losses = []
+        batch_accuracies = []
+        
         pbar = tqdm(train_loader, desc=f'Epoch {epoch+1}/{num_epochs}')
         for i, (images, labels) in enumerate(pbar):
             images, labels = images.to(device), labels.to(device)
             
-            # Forward pass
             outputs = model(images)
             loss = criterion(outputs, labels)
             
-            # Backward pass and optimize
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
             
-            # Calculate accuracy
+            # Calculate batch statistics
             _, predicted = torch.max(outputs.data, 1)
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
-            running_loss += loss.item()
+            batch_loss = loss.item()
+            batch_losses.append(batch_loss)
+            
+            # Calculate running averages
+            running_loss = sum(batch_losses) / len(batch_losses)
+            accuracy = 100 * correct / total
+            batch_accuracies.append(accuracy)
             
             # Update metrics every 50 batches
             if (i + 1) % 50 == 0:
-                accuracy = 100 * correct / total
-                avg_loss = running_loss / (i + 1)
-                
                 # Update progress bar
                 pbar.set_postfix({
-                    'loss': f'{avg_loss:.4f}',
+                    'loss': f'{running_loss:.4f}',
                     'accuracy': f'{accuracy:.2f}%'
                 })
                 
                 # Update server
-                update_server(global_step, avg_loss, accuracy, 
-                            f'Epoch [{epoch+1}/{num_epochs}], Step [{i+1}/{len(train_loader)}], Loss: {avg_loss:.4f}, Accuracy: {accuracy:.2f}%')
+                update_server(
+                    global_step,
+                    running_loss,
+                    accuracy,
+                    f'Epoch [{epoch+1}/{num_epochs}], Step [{i+1}/{len(train_loader)}], '
+                    f'Loss: {running_loss:.4f}, Accuracy: {accuracy:.2f}%'
+                )
             
             global_step += 1
+        
+        # Calculate epoch metrics
+        epoch_loss = sum(batch_losses) / len(batch_losses)
+        epoch_accuracy = sum(batch_accuracies) / len(batch_accuracies)
+        train_losses.append(epoch_loss)
+        train_accuracies.append(epoch_accuracy)
         
         epoch_time = time.time() - epoch_start
         print(f"\nEpoch {epoch+1} completed in {epoch_time:.2f} seconds")
@@ -164,6 +191,7 @@ def train():
         # Validation phase
         print("Running validation...")
         model.eval()
+        val_loss = 0.0
         val_correct = 0
         val_total = 0
         
@@ -171,26 +199,50 @@ def train():
             for images, labels in tqdm(test_loader, desc='Validation'):
                 images, labels = images.to(device), labels.to(device)
                 outputs = model(images)
+                loss = criterion(outputs, labels)
+                
+                val_loss += loss.item()
                 _, predicted = torch.max(outputs.data, 1)
                 val_total += labels.size(0)
                 val_correct += (predicted == labels).sum().item()
         
+        # Calculate validation metrics
+        val_loss = val_loss / len(test_loader)
         val_accuracy = 100 * val_correct / val_total
-        print(f"Validation Accuracy: {val_accuracy:.2f}%")
+        val_losses.append(val_loss)
+        val_accuracies.append(val_accuracy)
         
-        message = f'Epoch [{epoch+1}/{num_epochs}] completed. Validation Accuracy: {val_accuracy:.2f}%'
-        update_server(global_step, running_loss/len(train_loader), val_accuracy, message)
+        print(f"Validation Loss: {val_loss:.4f}, Accuracy: {val_accuracy:.2f}%")
+        
+        # Update server with validation results
+        update_server(
+            global_step,
+            val_loss,
+            val_accuracy,
+            f'Validation - Epoch [{epoch+1}/{num_epochs}], '
+            f'Loss: {val_loss:.4f}, Accuracy: {val_accuracy:.2f}%',
+            is_validation=True
+        )
         
         # Save best model
         if val_accuracy > best_accuracy:
             best_accuracy = val_accuracy
-            torch.save(model.state_dict(), 'best_model.pth')
+            best_loss = val_loss
+            torch.save({
+                'epoch': epoch,
+                'model_state_dict': model.state_dict(),
+                'optimizer_state_dict': optimizer.state_dict(),
+                'train_loss': epoch_loss,
+                'val_loss': val_loss,
+                'train_acc': epoch_accuracy,
+                'val_acc': val_accuracy,
+            }, 'best_model.pth')
             print(f"New best model saved with accuracy: {best_accuracy:.2f}%")
     
     print("Training completed. Generating final results...")
     
     # Load best model and generate final results
-    model.load_state_dict(torch.load('best_model.pth'))
+    model.load_state_dict(torch.load('best_model.pth')['model_state_dict'])
     model.eval()
     
     # Get 10 random test images

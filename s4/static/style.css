@@ -1,6 +1,6 @@
 :root {
-    --bg-primary: #0a192f;
-    --bg-secondary: #112240;
+    --bg-primary: rgba(10, 25, 47, 0.95);
+    --bg-secondary: rgba(17, 34, 64, 0.95);
     --text-primary: #ccd6f6;
     --text-secondary: #8892b0;
     --accent: #64ffda;
@@ -17,6 +17,23 @@ body {
     color: var(--text-primary);
     font-family: 'Inter', sans-serif;
     line-height: 1.6;
+    background-image: url('/static/ai-background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(10, 25, 47, 0.85);
+    z-index: -1;
 }
 
 .container {
@@ -63,10 +80,17 @@ body {
 
 .metric-card {
     background-color: var(--bg-secondary);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(100, 255, 218, 0.1);
     padding: 1.5rem;
     border-radius: 8px;
     text-align: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.metric-card:hover {
+    transform: translateY(-5px);
 }
 
 .metric-label {
@@ -85,6 +109,8 @@ body {
 
 .card {
     background-color: var(--bg-secondary);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(100, 255, 218, 0.1);
     padding: 1.5rem;
     border-radius: 8px;
     margin-bottom: 2rem;
@@ -154,4 +180,27 @@ body {
     .plot {
         height: 300px;
     }
+}
+
+.loading {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: var(--accent);
+    color: var(--bg-primary);
+    padding: 8px 16px;
+    border-radius: 4px;
+    display: none;
+    z-index: 1000;
+}
+
+.loading.active {
+    display: block;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
 } 

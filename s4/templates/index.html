@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Fira+Code&display=swap" rel="stylesheet">
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <meta http-equiv="refresh" content="300">  <!-- Auto refresh every 5 minutes -->
 </head>
 <body>
     <header class="header">
@@ -55,9 +56,17 @@
         </div>
     </main>
 
+    <div class="loading">Updating...</div>
+
     <script>
-        let lossData = {x: [], y: []};
-        let accuracyData = {x: [], y: []};
+        let lossData = {
+            train: {x: [], y: []},
+            val: {x: [], y: []}
+        };
+        let accuracyData = {
+            train: {x: [], y: []},
+            val: {x: [], y: []}
+        };
 
         const plotLayout = {
             paper_bgcolor: 'rgba(0,0,0,0)',
@@ -72,56 +81,140 @@
             yaxis: {
                 gridcolor: 'rgba(204, 214, 246, 0.1)',
                 zerolinecolor: 'rgba(204, 214, 246, 0.1)'
+            },
+            showlegend: true,
+            legend: {
+                x: 1,
+                xanchor: 'right',
+                y: 1
             }
         };
 
-        function updatePlots() {
-            $.getJSON('/get_metrics', function(data) {
-                lossData = data.loss;
-                accuracyData = data.accuracy;
-                
-                if (accuracyData.y.length > 0) {
-                    $('#current-accuracy').text(accuracyData.y[accuracyData.y.length - 1].toFixed(2) + '%');
-                    $('#current-loss').text(lossData.y[lossData.y.length - 1].toFixed(4));
-                    $('#current-epoch').text(Math.floor(accuracyData.x[accuracyData.x.length - 1] / 100));
-                }
+        let isUpdating = false;
 
-                Plotly.newPlot('loss-plot', [{
-                    x: lossData.x,
-                    y: lossData.y,
-                    type: 'scatter',
-                    name: 'Training Loss',
-                    line: { color: '#64ffda', width: 2 }
-                }], plotLayout);
-
-                Plotly.newPlot('accuracy-plot', [{
-                    x: accuracyData.x,
-                    y: accuracyData.y,
-                    type: 'scatter',
-                    name: 'Training Accuracy',
-                    line: { color: '#64ffda', width: 2 }
-                }], plotLayout);
-            });
-
-            $.get('/static/results.png')
-                .done(function() {
-                    $('#result-image').attr('src', '/static/results.png?' + new Date().getTime())
-                                    .show();
-                });
+        function showLoading() {
+            $('.loading').addClass('active');
         }
 
-        function updateLog() {
-            $.getJSON('/get_log', function(data) {
-                const logHtml = data.log.map(msg => 
+        function hideLoading() {
+            $('.loading').removeClass('active');
+        }
+
+        async function updatePlots() {
+            if (isUpdating) return;
+            isUpdating = true;
+            showLoading();
+
+            try {
+                const response = await $.getJSON('/get_metrics');
+                const data = response;
+
+                // Update loss data
+                lossData.train = {
+                    x: data.train_loss.x,
+                    y: data.train_loss.y
+                };
+                lossData.val = {
+                    x: data.val_loss.x,
+                    y: data.val_loss.y
+                };
+
+                // Update accuracy data
+                accuracyData.train = {
+                    x: data.train_accuracy.x,
+                    y: data.train_accuracy.y
+                };
+                accuracyData.val = {
+                    x: data.val_accuracy.x,
+                    y: data.val_accuracy.y
+                };
+                
+                // Update current metrics
+                if (lossData.train.y.length > 0) {
+                    $('#current-loss').text(
+                        lossData.train.y[lossData.train.y.length - 1].toFixed(4)
+                    );
+                }
+                if (accuracyData.train.y.length > 0) {
+                    $('#current-accuracy').text(
+                        accuracyData.train.y[accuracyData.train.y.length - 1].toFixed(2) + '%'
+                    );
+                }
+                if (lossData.train.x.length > 0) {
+                    $('#current-epoch').text(
+                        Math.floor(lossData.train.x[lossData.train.x.length - 1] / 100)
+                    );
+                }
+
+                // Plot loss
+                await Plotly.newPlot('loss-plot', [
+                    {
+                        x: lossData.train.x,
+                        y: lossData.train.y,
+                        type: 'scatter',
+                        name: 'Training Loss',
+                        line: { color: '#64ffda', width: 2 }
+                    },
+                    {
+                        x: lossData.val.x,
+                        y: lossData.val.y,
+                        type: 'scatter',
+                        name: 'Validation Loss',
+                        line: { color: '#ff6464', width: 2 }
+                    }
+                ], plotLayout);
+
+                // Plot accuracy
+                await Plotly.newPlot('accuracy-plot', [
+                    {
+                        x: accuracyData.train.x,
+                        y: accuracyData.train.y,
+                        type: 'scatter',
+                        name: 'Training Accuracy',
+                        line: { color: '#64ffda', width: 2 }
+                    },
+                    {
+                        x: accuracyData.val.x,
+                        y: accuracyData.val.y,
+                        type: 'scatter',
+                        name: 'Validation Accuracy',
+                        line: { color: '#ff6464', width: 2 }
+                    }
+                ], plotLayout);
+
+            } catch (error) {
+                console.error('Error updating plots:', error);
+            } finally {
+                isUpdating = false;
+                hideLoading();
+            }
+        }
+
+        async function updateLog() {
+            try {
+                const response = await $.getJSON('/get_log');
+                const logHtml = response.log.map(msg => 
                     `<div class="log-entry">${msg}</div>`
                 ).join('');
                 $('#training-log').html(logHtml);
                 $('#training-log').scrollTop($('#training-log')[0].scrollHeight);
-            });
+            } catch (error) {
+                console.error('Error updating log:', error);
+            }
         }
 
-        setInterval(updatePlots, 1000);
-        setInterval(updateLog, 1000);
+        // Initial update
+        updatePlots();
+        updateLog();
+
+        // Update every 2 seconds
+        setInterval(updatePlots, 2000);
+        setInterval(updateLog, 2000);
+
+        // Auto refresh page every 5 minutes
+        setInterval(() => {
+            window.location.reload();
+        }, 300000);
     </script>
 </body>
 </html>
