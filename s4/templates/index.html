@@ -29,9 +29,9 @@
                 <div class="metric-label">Training Loss</div>
                 <div class="metric-value" id="current-loss">0.000</div>
             </div>
-            <div class="metric-card">
+            <div class="metric-card" data-metric="accuracy">
                 <div class="metric-label">Accuracy</div>
-                <div class="metric-value" id="current-accuracy">0%</div>
+                <div class="metric-value" id="current-accuracy">0.000%</div>
             </div>
         </div>
 
@@ -78,15 +78,32 @@
                 zerolinecolor: 'rgba(204, 214, 246, 0.1)',
                 title: 'Iteration'
             },
-            yaxis: {
-                gridcolor: 'rgba(204, 214, 246, 0.1)',
-                zerolinecolor: 'rgba(204, 214, 246, 0.1)'
-            },
             showlegend: true,
             legend: {
                 x: 1,
                 xanchor: 'right',
                 y: 1
+            }
+        };
+
+        const lossLayout = {
+            ...plotLayout,
+            yaxis: {
+                gridcolor: 'rgba(204, 214, 246, 0.1)',
+                zerolinecolor: 'rgba(204, 214, 246, 0.1)',
+                title: 'Loss'
+            }
+        };
+
+        const accuracyLayout = {
+            ...plotLayout,
+            yaxis: {
+                gridcolor: 'rgba(204, 214, 246, 0.1)',
+                zerolinecolor: 'rgba(204, 214, 246, 0.1)',
+                title: 'Accuracy (%)',
+                range: [90, 100],  // Set fixed range from 90% to 100%
+                dtick: 1,  // Show tick marks every 1%
+                tickformat: '.1f',  // Show one decimal place
             }
         };
 
@@ -137,7 +154,7 @@
                 }
                 if (accuracyData.train.y.length > 0) {
                     $('#current-accuracy').text(
-                        accuracyData.train.y[accuracyData.train.y.length - 1].toFixed(2) + '%'
+                        accuracyData.train.y[accuracyData.train.y.length - 1].toFixed(3) + '%'
                     );
                 }
                 if (lossData.train.x.length > 0) {
@@ -146,7 +163,7 @@
                     );
                 }
 
-                // Plot loss
+                // Plot loss with original scale
                 await Plotly.newPlot('loss-plot', [
                     {
                         x: lossData.train.x,
@@ -162,25 +179,27 @@
                         name: 'Validation Loss',
                         line: { color: '#ff6464', width: 2 }
                     }
-                ], plotLayout);
+                ], lossLayout);
 
-                // Plot accuracy
+                // Plot accuracy with zoomed scale (90-100%)
                 await Plotly.newPlot('accuracy-plot', [
                     {
                         x: accuracyData.train.x,
                         y: accuracyData.train.y,
                         type: 'scatter',
                         name: 'Training Accuracy',
-                        line: { color: '#64ffda', width: 2 }
+                        line: { color: '#64ffda', width: 2 },
+                        hovertemplate: '%{y:.2f}%<extra></extra>'
                     },
                     {
                         x: accuracyData.val.x,
                         y: accuracyData.val.y,
                         type: 'scatter',
                         name: 'Validation Accuracy',
-                        line: { color: '#ff6464', width: 2 }
+                        line: { color: '#ff6464', width: 2 },
+                        hovertemplate: '%{y:.2f}%<extra></extra>'
                     }
-                ], plotLayout);
+                ], accuracyLayout);
 
             } catch (error) {
                 console.error('Error updating plots:', error);

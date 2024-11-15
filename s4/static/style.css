@@ -105,6 +105,17 @@ body::before {
     font-size: 2rem;
     font-weight: 700;
     color: var(--accent);
+    font-family: 'Fira Code', monospace;
+}
+
+.metric-card[data-metric="accuracy"] .metric-value {
+    font-size: 1.8rem;
+    letter-spacing: -0.5px;
+}
+
+.accuracy-grid-line {
+    stroke: rgba(204, 214, 246, 0.05);
+    stroke-width: 1;
 }
 
 .card {
