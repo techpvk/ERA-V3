@@ -203,9 +203,9 @@
                 gridcolor: 'rgba(204, 214, 246, 0.1)',
                 zerolinecolor: 'rgba(204, 214, 246, 0.1)',
                 title: 'Accuracy (%)',
-                range: [90, 100],  // Set fixed range from 90% to 100%
-                dtick: 1,  // Show tick marks every 1%
-                tickformat: '.1f',  // Show one decimal place
+                range: [0, 100],
+                dtick: 10,
+                tickformat: '.1f'
             }
         };
 
@@ -387,7 +387,13 @@
             $.get('/get_training_status', function(data) {
                 console.log("Training status:", data);  // Debug print
                 
+                // Remove running class from all cards
+                $('.config-card').removeClass('running');
+                
                 if (data.is_training && data.current_model) {
+                    // Add running class to active model card
+                    $(`#train-model${data.current_model}`).closest('.config-card').addClass('running');
+                    
                     // Update global status
                     $('.status').text('Training in Progress');
                     

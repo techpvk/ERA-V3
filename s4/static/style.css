@@ -309,7 +309,7 @@ body::before {
     padding: 1.5rem;
     border-radius: 8px;
     border: 1px solid rgba(100, 255, 218, 0.1);
-    transition: transform 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .config-card:hover {
@@ -481,10 +481,12 @@ body::before {
     margin-left: 0.5rem;
     color: white;
     font-weight: 600;
+    transition: all 0.3s ease;
 }
 
 .status-badge.training {
-    background-color: #2a9d8f !important;
+    background: linear-gradient(45deg, #00b4d8, #0077b6) !important;
+    box-shadow: 0 0 10px rgba(0, 180, 216, 0.3);
 }
 
 #status-model1, #status-model2 {
@@ -493,19 +495,24 @@ body::before {
 }
 
 .status-badge:contains('Completed') {
-    background-color: #264653;
-    color: white;
+    background: linear-gradient(45deg, #2a9d8f, #264653);
 }
 
 .training-info {
     display: flex;
     gap: 1rem;
     margin: 0.5rem 0 1rem 0;
-    padding: 0.5rem;
-    background-color: var(--bg-primary);
-    border-radius: 4px;
+    padding: 0.8rem;
+    background: rgba(17, 34, 64, 0.6);
+    border-radius: 6px;
     font-family: 'Fira Code', monospace;
     font-size: 0.9rem;
+    border: 1px solid rgba(100, 255, 218, 0.1);
+}
+
+.running .training-info {
+    background: rgba(42, 157, 143, 0.1);
+    border: 1px solid rgba(100, 255, 218, 0.2);
 }
 
 .metric {
@@ -544,4 +551,56 @@ body::before {
     font-family: 'Fira Code', monospace;
     font-size: 1.1rem;
     color: var(--accent);
+}
+
+/* Add styles for active (running) model card */
+.config-card.running {
+    background: linear-gradient(145deg, rgba(42, 157, 143, 0.1), rgba(100, 255, 218, 0.05));
+    border: 1px solid rgba(100, 255, 218, 0.3);
+    box-shadow: 0 0 20px rgba(100, 255, 218, 0.1);
+    transform: translateY(-5px);
+}
+
+/* Status badge styles */
+.status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    margin-left: 0.5rem;
+    color: white;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.status-badge.training {
+    background: linear-gradient(45deg, #00b4d8, #0077b6) !important;
+    box-shadow: 0 0 10px rgba(0, 180, 216, 0.3);
+}
+
+#status-model1, #status-model2 {
+    min-width: 80px;
+    text-align: center;
+}
+
+.status-badge:contains('Completed') {
+    background: linear-gradient(45deg, #2a9d8f, #264653);
+}
+
+/* Training info panel styles */
+.training-info {
+    display: flex;
+    gap: 1rem;
+    margin: 0.5rem 0 1rem 0;
+    padding: 0.8rem;
+    background: rgba(17, 34, 64, 0.6);
+    border-radius: 6px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.9rem;
+    border: 1px solid rgba(100, 255, 218, 0.1);
+}
+
+.running .training-info {
+    background: rgba(42, 157, 143, 0.1);
+    border: 1px solid rgba(100, 255, 218, 0.2);
 } 
