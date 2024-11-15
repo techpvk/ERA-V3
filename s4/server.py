@@ -107,7 +107,6 @@ def training_worker():
     global is_training, current_model_id, current_epoch
     
     while True:
-        # Wait for training request
         training_params = training_queue.get()
         if training_params is None:
             continue
@@ -117,9 +116,19 @@ def training_worker():
             current_model_id = training_params['model_id']
             current_epoch = 0
             
-            # Log training start
+            # Log training configuration
             timestamp = datetime.now().strftime('%H:%M:%S')
-            training_log.append(f"[{timestamp}] Starting training for Model {current_model_id}")
+            config_message = f"""[{timestamp}] Starting training for Model {current_model_id}
+            Configuration:
+            - Channels: Layer1={training_params['channels']['layer1']}, Layer2={training_params['channels']['layer2']}, 
+                       Layer3={training_params['channels']['layer3']}, Layer4={training_params['channels']['layer4']}
+            - Batch Size: {training_params['batch_size']}
+            - Epochs: {training_params['epochs']}
+            - Optimizer: {training_params['optimizer_config']['name']}
+            - Learning Rate: {training_params['optimizer_config']['learning_rate']}
+            """
+            training_log.append(config_message)
+            logger.info(config_message)
             
             # Enable server mode for metrics updates
             from train import update_metrics
@@ -131,6 +140,7 @@ def training_worker():
                 channels=training_params['channels'],
                 batch_size=training_params['batch_size'],
                 epochs=training_params['epochs'],
+                optimizer_config=training_params['optimizer_config'],
                 results=model_results[training_params['model_id']],
                 training_log=training_log
             )

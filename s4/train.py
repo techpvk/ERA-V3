@@ -187,7 +187,7 @@ def train_model(model_id, channels, batch_size, epochs, optimizer_config=None, r
                     running_loss,
                     accuracy,
                     model_id,
-                    f"Model {model_id} - Epoch {epoch+1}/{epochs}, Progress: {progress:.1f}%",
+                    f"Model {model_id} - Epoch {epoch+1}/{epochs}, Batch {i+1}/{total_batches} ({progress:.1f}%)",
                     current_epoch=epoch+1
                 )
                 
