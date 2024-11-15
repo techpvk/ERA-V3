@@ -22,6 +22,9 @@ A real-time visualization tool for monitoring MNIST digit classification trainin
 - Plotly.js (included via CDN)
 - jQuery (included via CDN)
 
+## Portal UI
+![alt text](static/image1.png)
+![alt text](static/image2.png)
 ## Installation & Setup
 
 1. Clone the repository: 
