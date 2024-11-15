@@ -105,8 +105,9 @@ def train_model(model_id, channels, batch_size, epochs, results=None, training_l
         train_dataset = datasets.MNIST('./data', train=True, download=True, transform=transform)
         test_dataset = datasets.MNIST('./data', train=False, transform=transform)
         
-        train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
-        test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
+        print(f"[Model {model_id}] Setting up data loaders with batch size: {batch_size}")
+        train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=2)
+        test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False, num_workers=2)
         
         print(f"[Model {model_id}] Initializing model...")
         model = CNN(channels).to(device)

@@ -474,9 +474,10 @@ body::before {
 }
 
 .status-badge {
-    font-size: 0.8rem;
+    display: inline-block;
     padding: 0.25rem 0.5rem;
     border-radius: 4px;
+    font-size: 0.8rem;
     margin-left: 0.5rem;
     background-color: var(--bg-primary);
     color: var(--text-secondary);
@@ -487,7 +488,7 @@ body::before {
     color: white;
 }
 
-.status-badge.completed {
+.status-badge:contains('Completed') {
     background-color: #264653;
     color: white;
 }

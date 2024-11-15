@@ -127,7 +127,7 @@
                             </div>
                             <div class="input-group">
                                 <label for="model2-epochs">Number of Epochs:</label>
-                                <input type="number" id="model2-epochs" value="10" min="1" max="100">
+                                <input type="number" id="model2-epochs" value="1" min="1" max="100">
                             </div>
                         </div>
                     </div>
@@ -382,6 +382,68 @@
         setInterval(() => {
             window.location.reload();
         }, 300000);
+
+        function updateTrainingStatus() {
+            $.get('/get_training_status', function(data) {
+                console.log("Training status:", data);  // Debug print
+                
+                if (data.is_training) {
+                    // Update global status
+                    $('.status').text('Training in Progress');
+                    
+                    // Reset all status badges first
+                    $('.status-badge').text('Not Started').removeClass('training');
+                    
+                    // Update current model's status
+                    const modelId = data.current_model;
+                    $(`#status-model${modelId}`)
+                        .text('Training')
+                        .addClass('training');
+                    
+                    // Update metrics for current model
+                    $('#current-epoch').text(data.current_epoch);
+                    $('#current-loss').text(data.current_loss.toFixed(4));
+                    $('#current-accuracy').text(data.current_accuracy.toFixed(2) + '%');
+                    
+                    // Update individual model metrics
+                    $(`#epoch-model${modelId}`).text(data.current_epoch);
+                    $(`#loss-model${modelId}`).text(data.current_loss.toFixed(4));
+                    $(`#accuracy-model${modelId}`).text(data.current_accuracy.toFixed(2) + '%');
+                    
+                    // Update button states
+                    $(`#train-model${modelId}`).prop('disabled', true).text('Training...');
+                    $(`#train-model${modelId === 1 ? 2 : 1}`).prop('disabled', false);
+                } else {
+                    // When no training is in progress
+                    $('.status').text('Waiting for Training');
+                    
+                    // Check if models have been trained by looking at their metrics
+                    $.getJSON('/get_comparison_data', function(modelData) {
+                        // Check Model 1
+                        if (modelData.model1.train_accuracy.y.length > 0) {
+                            $('#status-model1').text('Completed');
+                        } else {
+                            $('#status-model1').text('Not Started');
+                        }
+                        
+                        // Check Model 2
+                        if (modelData.model2.train_accuracy.y.length > 0) {
+                            $('#status-model2').text('Completed');
+                        } else {
+                            $('#status-model2').text('Not Started');
+                        }
+                    });
+                    
+                    // Enable all training buttons
+                    $('.train-btn').prop('disabled', false).each(function() {
+                        const modelNum = $(this).attr('id').slice(-1);
+                        $(this).text(`Train Model ${modelNum}`);
+                    });
+                }
+            }).fail(function(error) {
+                console.error("Error updating status:", error);
+            });
+        }
     </script>
 </body>
 </html>
