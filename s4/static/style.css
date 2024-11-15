@@ -479,13 +479,17 @@ body::before {
     border-radius: 4px;
     font-size: 0.8rem;
     margin-left: 0.5rem;
-    background-color: var(--bg-primary);
-    color: var(--text-secondary);
+    color: white;
+    font-weight: 600;
 }
 
 .status-badge.training {
-    background-color: #2a9d8f;
-    color: white;
+    background-color: #2a9d8f !important;
+}
+
+#status-model1, #status-model2 {
+    min-width: 80px;
+    text-align: center;
 }
 
 .status-badge:contains('Completed') {

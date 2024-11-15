@@ -387,18 +387,24 @@
             $.get('/get_training_status', function(data) {
                 console.log("Training status:", data);  // Debug print
                 
-                if (data.is_training) {
+                if (data.is_training && data.current_model) {
                     // Update global status
                     $('.status').text('Training in Progress');
-                    
-                    // Reset all status badges first
-                    $('.status-badge').text('Not Started').removeClass('training');
                     
                     // Update current model's status
                     const modelId = data.current_model;
                     $(`#status-model${modelId}`)
                         .text('Training')
-                        .addClass('training');
+                        .addClass('training')
+                        .css('background-color', '#2a9d8f');
+                    
+                    // Keep other model's previous status
+                    const otherModelId = modelId === 1 ? 2 : 1;
+                    if ($(`#status-model${otherModelId}`).text() !== 'Completed') {
+                        $(`#status-model${otherModelId}`)
+                            .text('Not Started')
+                            .removeClass('training');
+                    }
                     
                     // Update metrics for current model
                     $('#current-epoch').text(data.current_epoch);
@@ -412,25 +418,27 @@
                     
                     // Update button states
                     $(`#train-model${modelId}`).prop('disabled', true).text('Training...');
-                    $(`#train-model${modelId === 1 ? 2 : 1}`).prop('disabled', false);
+                    $(`#train-model${otherModelId}`).prop('disabled', false);
                 } else {
                     // When no training is in progress
                     $('.status').text('Waiting for Training');
                     
-                    // Check if models have been trained by looking at their metrics
+                    // Check model states from their metrics
                     $.getJSON('/get_comparison_data', function(modelData) {
                         // Check Model 1
                         if (modelData.model1.train_accuracy.y.length > 0) {
-                            $('#status-model1').text('Completed');
-                        } else {
-                            $('#status-model1').text('Not Started');
+                            $('#status-model1')
+                                .text('Completed')
+                                .removeClass('training')
+                                .css('background-color', '#264653');
                         }
                         
                         // Check Model 2
                         if (modelData.model2.train_accuracy.y.length > 0) {
-                            $('#status-model2').text('Completed');
-                        } else {
-                            $('#status-model2').text('Not Started');
+                            $('#status-model2')
+                                .text('Completed')
+                                .removeClass('training')
+                                .css('background-color', '#264653');
                         }
                     });
                     
@@ -444,6 +452,9 @@
                 console.error("Error updating status:", error);
             });
         }
+
+        // Update more frequently
+        setInterval(updateTrainingStatus, 100);  // Every 100ms
     </script>
 </body>
 </html>
