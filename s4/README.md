@@ -2,16 +2,31 @@
 
 A real-time visualization tool for training and comparing MNIST classification models with different architectures and hyperparameters.
 
+## Demo Video
+
+https://github.com/yourusername/neural-network-monitor/assets/static/demo.mp4
+
 ## Features
 
 - Real-time training visualization
 - Concurrent model comparison
 - Customizable network architecture
-- Multiple optimizer support
+- Multiple optimizer support (Adam, SGD, RMSprop, Adagrad)
 - Live metrics tracking
 - Interactive plots
 - Training logs
 - Modern UI with AI theme
+
+## Screenshots
+
+### Real-time Training Interface
+![Training Interface](static/screenshots/interface.png)
+
+### Model Comparison
+![Model Comparison](static/screenshots/comparison.png)
+
+### Live Metrics
+![Live Metrics](static/screenshots/metrics.png)
 
 ## Requirements
 
@@ -25,7 +40,7 @@ A real-time visualization tool for training and comparing MNIST classification m
 1. Clone the repository:
 ```bash
 git clone [repository-url]
-cd mnist-training-monitor
+cd neural-network-monitor
 ```
 
 2. Create and activate a virtual environment (recommended):
@@ -39,129 +54,100 @@ python3 -m venv venv
 source venv/bin/activate
 ```
 
-3. Install dependencies using requirements.txt:
+3. Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-4. Create required directories:
+4. Download UI assets:
 ```bash
-mkdir -p static templates data
+python download_assets.py
 ```
 
-5. Verify installation:
-```bash
-python -c "import torch; print(f'PyTorch version: {torch.__version__}')"
-python -c "import flask; print(f'Flask version: {flask.__version__}')"
-```
+## Usage
 
-5. Copy the project files to their respective directories:
-- `server.py` → root directory
-- `train.py` → root directory
-- `index.html` → templates/
-- `style.css` → static/
-
-## Running the Application
-
-1. Start the Flask server:
+1. Start the server:
 ```bash
 python server.py
 ```
 
-2. Open a new terminal window, activate the virtual environment, and start the training:
-```bash
-python train.py
-```
-
-3. Open your web browser and navigate to:
+2. Open your browser and navigate to:
 ```
 http://localhost:5000
 ```
 
+3. Configure and train models:
+   - Set network architecture (channels per layer)
+   - Choose optimizer (Adam, SGD, RMSprop, Adagrad)
+   - Set learning rate
+   - Adjust batch size and epochs
+   - Click "Train Model" to start training
+
+## Model Configuration Options
+
+### Network Architecture
+- Layer 1-4 channels: 1-512
+- Batch size: 32-1024
+- Epochs: 1-100
+
+### Optimizers
+- Adam (default)
+  - Learning rate: 0.001
+  - Beta1: 0.9
+  - Beta2: 0.999
+- SGD with momentum
+  - Learning rate: 0.01
+  - Momentum: 0.9
+- RMSprop
+  - Learning rate: 0.001
+  - Alpha: 0.99
+- Adagrad
+  - Learning rate: 0.01
+  - Initial accumulator: 0
+
 ## Project Structure
 
 ```
-mnist-training-monitor/
-├── server.py           # Flask server implementation
-├── train.py           # CNN model and training logic
-├── templates/
-│   └── index.html    # Web interface template
-├── static/
-│   └── style.css     # CSS styling
-├── data/             # MNIST dataset storage
+neural-network-monitor/
+├── server.py           # Flask server and training coordinator
+├── train.py           # Neural network model and training logic
+├── static/            # Static assets and styles
+│   ├── style.css     # CSS styling
+│   ├── demo.mp4      # Demo video
+│   └── screenshots/  # UI screenshots
+├── templates/         # HTML templates
+│   └── index.html    # Web interface
+├── data/             # Dataset storage
 └── README.md
 ```
 
-## Model Architecture
+## Features in Detail
 
-The CNN model consists of:
-- 4 convolutional layers with batch normalization
-- MaxPooling layers for dimensionality reduction
-- Dropout layers (0.5) for regularization
-- 2 fully connected layers
-- ReLU activation functions
+### Real-time Monitoring
+- Loss tracking
+- Accuracy metrics
+- Training progress
+- Validation results
 
-## Monitoring Features
+### Comparison Tools
+- Side-by-side model comparison
+- Performance plots
+- Architecture comparison
 
-The web interface provides:
-- Real-time loss and accuracy plots
-- Current epoch, loss, and accuracy metrics
-- Live training log
-- Sample predictions visualization
-- Responsive design for all screen sizes
-
-## Troubleshooting
-
-1. If the server fails to start:
-   - Check if port 5000 is available
-   - Ensure all required packages are installed
-   - Verify file permissions in the project directories
-
-2. If training doesn't start:
-   - Confirm CUDA availability for GPU training
-   - Check system memory availability
-   - Verify MNIST dataset download permissions
-
-3. If visualization doesn't update:
-   - Clear browser cache
-   - Check browser console for errors
-   - Verify network connectivity to localhost
+### Interactive UI
+- Live updates
+- Dynamic plots
+- Training logs
+- Status indicators
 
 ## Contributing
 
 1. Fork the repository
-2. Create a feature branch
+2. Create your feature branch
 3. Commit your changes
 4. Push to the branch
 5. Create a Pull Request
 
 ## License
 
-[Add your license here]
-
-## Acknowledgments
-
-- MNIST Dataset providers
-- PyTorch development team
-- Flask framework contributors
-
-## Version Requirements
-
-- Python >= 3.8
-- CUDA >= 11.0 (for GPU support)
-- All other dependencies are listed in requirements.txt
-
-## Updating Dependencies
-
-To update to the latest compatible versions:
-```bash
-pip install --upgrade -r requirements.txt
-```
-
-## Development Installation
-
-For development, you might want to install additional packages:
-```bash
-pip install -r requirements.txt
-pip install pytest black flake8 mypy  # Development tools
-```
+This project is licensed under the MIT License - see the LICENSE file for details.
