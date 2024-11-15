@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural Network Training Monitor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Fira+Code&display=swap" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <meta http-equiv="refresh" content="300">  <!-- Auto refresh every 5 minutes -->
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1 class="title">Neural Network Training Monitor</h1>
+            <p class="subtitle">Real-time MNIST Classification Training Visualization</p>
+            <div class="status">Training in Progress</div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-label">Current Epoch</div>
+                <div class="metric-value" id="current-epoch">0</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Training Loss</div>
+                <div class="metric-value" id="current-loss">0.000</div>
+            </div>
+            <div class="metric-card" data-metric="accuracy">
+                <div class="metric-label">Accuracy</div>
+                <div class="metric-value" id="current-accuracy">0.000%</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">Loss Curve</h2>
+            <div id="loss-plot" class="plot"></div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">Accuracy Curve</h2>
+            <div id="accuracy-plot" class="plot"></div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">Training Log</h2>
+            <div id="training-log"></div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">Model Predictions</h2>
+            <img id="result-image" style="display: none;">
+        </div>
+    </main>
+
+    <div class="loading">Updating...</div>
+
+    <script>
+        let lossData = {
+            train: {x: [], y: []},
+            val: {x: [], y: []}
+        };
+        let accuracyData = {
+            train: {x: [], y: []},
+            val: {x: [], y: []}
+        };
+
+        const plotLayout = {
+            paper_bgcolor: 'rgba(0,0,0,0)',
+            plot_bgcolor: 'rgba(0,0,0,0)',
+            font: { color: '#ccd6f6' },
+            margin: { l: 50, r: 20, t: 30, b: 40 },
+            xaxis: {
+                gridcolor: 'rgba(204, 214, 246, 0.1)',
+                zerolinecolor: 'rgba(204, 214, 246, 0.1)',
+                title: 'Iteration'
+            },
+            showlegend: true,
+            legend: {
+                x: 1,
+                xanchor: 'right',
+                y: 1
+            }
+        };
+
+        const lossLayout = {
+            ...plotLayout,
+            yaxis: {
+                gridcolor: 'rgba(204, 214, 246, 0.1)',
+                zerolinecolor: 'rgba(204, 214, 246, 0.1)',
+                title: 'Loss'
+            }
+        };
+
+        const accuracyLayout = {
+            ...plotLayout,
+            yaxis: {
+                gridcolor: 'rgba(204, 214, 246, 0.1)',
+                zerolinecolor: 'rgba(204, 214, 246, 0.1)',
+                title: 'Accuracy (%)',
+                range: [90, 100],  // Set fixed range from 90% to 100%
+                dtick: 1,  // Show tick marks every 1%
+                tickformat: '.1f',  // Show one decimal place
+            }
+        };
+
+        let isUpdating = false;
+
+        function showLoading() {
+            $('.loading').addClass('active');
+        }
+
+        function hideLoading() {
+            $('.loading').removeClass('active');
+        }
+
+        async function updatePlots() {
+            if (isUpdating) return;
+            isUpdating = true;
+            showLoading();
+
+            try {
+                const response = await $.getJSON('/get_metrics');
+                const data = response;
+
+                // Update loss data
+                lossData.train = {
+                    x: data.train_loss.x,
+                    y: data.train_loss.y
+                };
+                lossData.val = {
+                    x: data.val_loss.x,
+                    y: data.val_loss.y
+                };
+
+                // Update accuracy data
+                accuracyData.train = {
+                    x: data.train_accuracy.x,
+                    y: data.train_accuracy.y
+                };
+                accuracyData.val = {
+                    x: data.val_accuracy.x,
+                    y: data.val_accuracy.y
+                };
+                
+                // Update current metrics
+                if (lossData.train.y.length > 0) {
+                    $('#current-loss').text(
+                        lossData.train.y[lossData.train.y.length - 1].toFixed(4)
+                    );
+                }
+                if (accuracyData.train.y.length > 0) {
+                    $('#current-accuracy').text(
+                        accuracyData.train.y[accuracyData.train.y.length - 1].toFixed(3) + '%'
+                    );
+                }
+                if (lossData.train.x.length > 0) {
+                    $('#current-epoch').text(
+                        Math.floor(lossData.train.x[lossData.train.x.length - 1] / 100)
+                    );
+                }
+
+                // Plot loss with original scale
+                await Plotly.newPlot('loss-plot', [
+                    {
+                        x: lossData.train.x,
+                        y: lossData.train.y,
+                        type: 'scatter',
+                        name: 'Training Loss',
+                        line: { color: '#64ffda', width: 2 }
+                    },
+                    {
+                        x: lossData.val.x,
+                        y: lossData.val.y,
+                        type: 'scatter',
+                        name: 'Validation Loss',
+                        line: { color: '#ff6464', width: 2 }
+                    }
+                ], lossLayout);
+
+                // Plot accuracy with zoomed scale (90-100%)
+                await Plotly.newPlot('accuracy-plot', [
+                    {
+                        x: accuracyData.train.x,
+                        y: accuracyData.train.y,
+                        type: 'scatter',
+                        name: 'Training Accuracy',
+                        line: { color: '#64ffda', width: 2 },
+                        hovertemplate: '%{y:.2f}%<extra></extra>'
+                    },
+                    {
+                        x: accuracyData.val.x,
+                        y: accuracyData.val.y,
+                        type: 'scatter',
+                        name: 'Validation Accuracy',
+                        line: { color: '#ff6464', width: 2 },
+                        hovertemplate: '%{y:.2f}%<extra></extra>'
+                    }
+                ], accuracyLayout);
+
+            } catch (error) {
+                console.error('Error updating plots:', error);
+            } finally {
+                isUpdating = false;
+                hideLoading();
+            }
+        }
+
+        async function updateLog() {
+            try {
+                const response = await $.getJSON('/get_log');
+                const logHtml = response.log.map(msg => 
+                    `<div class="log-entry">${msg}</div>`
+                ).join('');
+                $('#training-log').html(logHtml);
+                $('#training-log').scrollTop($('#training-log')[0].scrollHeight);
+            } catch (error) {
+                console.error('Error updating log:', error);
+            }
+        }
+
+        // Initial update
+        updatePlots();
+        updateLog();
+
+        // Update every 2 seconds
+        setInterval(updatePlots, 2000);
+        setInterval(updateLog, 2000);
+
+        // Auto refresh page every 5 minutes
+        setInterval(() => {
+            window.location.reload();
+        }, 300000);
+    </script>
+</body>
+</html>
+    
