@@ -4,7 +4,7 @@ A real-time visualization tool for training and comparing MNIST classification m
 
 ## Demo Video
 
-[https://github.com/yourusername/neural-network-monitor/assets/static/demo.mp4](https://github.com/techpvk/ERA-V3/blob/main/s4/static/demo.mp4)
+[Demo](https://github.com/techpvk/ERA-V3/blob/main/s4/static/demo.mp4)
 
 ## Features
 
