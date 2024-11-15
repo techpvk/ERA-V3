@@ -5,4 +5,5 @@ matplotlib>=3.5.0
 numpy>=1.21.0
 requests>=2.26.0
 tqdm>=4.62.0
-pillow>=8.0.0 
+pillow>=8.0.0
+waitress>=2.0.0 

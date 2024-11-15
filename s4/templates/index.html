@@ -15,7 +15,6 @@
         <div class="container">
             <h1 class="title">Neural Network Training Monitor</h1>
             <p class="subtitle">Real-time MNIST Classification Training Visualization</p>
-            <div class="status">Training in Progress</div>
         </div>
     </header>
 
@@ -35,24 +34,152 @@
             </div>
         </div>
 
-        <div class="card">
-            <h2 class="card-title">Loss Curve</h2>
-            <div id="loss-plot" class="plot"></div>
-        </div>
+        <div class="model-config-section">
+            <h2 class="section-title">Model Configuration</h2>
+            <div class="models-container">
+                <!-- Model 1 Configuration -->
+                <div class="config-card">
+                    <h3>Model 1 
+                        <span class="status-badge" id="status-model1">Not Started</span>
+                    </h3>
+                    <div class="training-info" id="info-model1">
+                        <span class="metric">Epoch: <span id="epoch-model1">0</span></span>
+                        <span class="metric">Loss: <span id="loss-model1">0.0</span></span>
+                        <span class="metric">Accuracy: <span id="accuracy-model1">0.0%</span></span>
+                    </div>
+                    <div class="channel-inputs">
+                        <!-- Kernel Channels -->
+                        <div class="config-group">
+                            <h4>Kernel Channels</h4>
+                            <div class="input-group">
+                                <label for="model1-l1">Layer 1 Channels:</label>
+                                <input type="number" id="model1-l1" value="16" min="1" max="512">
+                            </div>
+                            <div class="input-group">
+                                <label for="model1-l2">Layer 2 Channels:</label>
+                                <input type="number" id="model1-l2" value="32" min="1" max="512">
+                            </div>
+                            <div class="input-group">
+                                <label for="model1-l3">Layer 3 Channels:</label>
+                                <input type="number" id="model1-l3" value="64" min="1" max="512">
+                            </div>
+                            <div class="input-group">
+                                <label for="model1-l4">Layer 4 Channels:</label>
+                                <input type="number" id="model1-l4" value="128" min="1" max="512">
+                            </div>
+                        </div>
+                        
+                        <!-- Training Parameters -->
+                        <div class="config-group">
+                            <h4>Training Parameters</h4>
+                            <div class="input-group">
+                                <label for="model1-optimizer">Optimizer:</label>
+                                <select id="model1-optimizer" class="optimizer-select">
+                                    <option value="adam">Adam</option>
+                                    <option value="sgd">SGD</option>
+                                    <option value="rmsprop">RMSprop</option>
+                                    <option value="adagrad">Adagrad</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label for="model1-lr">Learning Rate:</label>
+                                <input type="number" id="model1-lr" value="0.001" min="0.0001" max="0.1" step="0.0001">
+                            </div>
+                            <div class="input-group">
+                                <label for="model1-batch">Batch Size:</label>
+                                <input type="number" id="model1-batch" value="512" min="32" max="1024" step="32">
+                            </div>
+                            <div class="input-group">
+                                <label for="model1-epochs">Number of Epochs:</label>
+                                <input type="number" id="model1-epochs" value="1" min="1" max="100">
+                            </div>
+                        </div>
+                    </div>
+                    <button id="train-model1" class="train-btn">Train Model 1</button>
+                </div>
 
-        <div class="card">
-            <h2 class="card-title">Accuracy Curve</h2>
-            <div id="accuracy-plot" class="plot"></div>
-        </div>
+                <!-- Model 2 Configuration -->
+                <div class="config-card">
+                    <h3>Model 2
+                        <span class="status-badge" id="status-model2">Not Started</span>
+                    </h3>
+                    <div class="training-info" id="info-model2">
+                        <span class="metric">Epoch: <span id="epoch-model2">0</span></span>
+                        <span class="metric">Loss: <span id="loss-model2">0.0</span></span>
+                        <span class="metric">Accuracy: <span id="accuracy-model2">0.0%</span></span>
+                    </div>
+                    <div class="channel-inputs">
+                        <!-- Kernel Channels -->
+                        <div class="config-group">
+                            <h4>Kernel Channels</h4>
+                            <div class="input-group">
+                                <label for="model2-l1">Layer 1 Channels:</label>
+                                <input type="number" id="model2-l1" value="8" min="1" max="512">
+                            </div>
+                            <div class="input-group">
+                                <label for="model2-l2">Layer 2 Channels:</label>
+                                <input type="number" id="model2-l2" value="16" min="1" max="512">
+                            </div>
+                            <div class="input-group">
+                                <label for="model2-l3">Layer 3 Channels:</label>
+                                <input type="number" id="model2-l3" value="32" min="1" max="512">
+                            </div>
+                            <div class="input-group">
+                                <label for="model2-l4">Layer 4 Channels:</label>
+                                <input type="number" id="model2-l4" value="64" min="1" max="512">
+                            </div>
+                        </div>
+                        
+                        <!-- Training Parameters -->
+                        <div class="config-group">
+                            <h4>Training Parameters</h4>
+                            <div class="input-group">
+                                <label for="model2-optimizer">Optimizer:</label>
+                                <select id="model2-optimizer" class="optimizer-select">
+                                    <option value="adam">Adam</option>
+                                    <option value="sgd">SGD</option>
+                                    <option value="rmsprop">RMSprop</option>
+                                    <option value="adagrad">Adagrad</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label for="model2-lr">Learning Rate:</label>
+                                <input type="number" id="model2-lr" value="0.001" min="0.0001" max="0.1" step="0.0001">
+                            </div>
+                            <div class="input-group">
+                                <label for="model2-batch">Batch Size:</label>
+                                <input type="number" id="model2-batch" value="512" min="32" max="1024" step="32">
+                            </div>
+                            <div class="input-group">
+                                <label for="model2-epochs">Number of Epochs:</label>
+                                <input type="number" id="model2-epochs" value="1" min="1" max="100">
+                            </div>
+                        </div>
+                    </div>
+                    <button id="train-model2" class="train-btn">Train Model 2</button>
+                </div>
+            </div>
 
-        <div class="card">
-            <h2 class="card-title">Training Log</h2>
-            <div id="training-log"></div>
-        </div>
+            <!-- Comparison Results Section -->
+            <div class="comparison-results">
+                <h3>Model Comparison Results</h3>
+                <div class="plots-container">
+                    <div class="plot-card">
+                        <h4>Loss Comparison</h4>
+                        <div id="loss-plot" class="plot"></div>
+                    </div>
+                    <div class="plot-card">
+                        <h4>Accuracy Comparison</h4>
+                        <div id="accuracy-plot" class="plot"></div>
+                    </div>
+                </div>
+            </div>
 
-        <div class="card">
-            <h2 class="card-title">Model Predictions</h2>
-            <img id="result-image" style="display: none;">
+            <!-- Training Log Section -->
+            <div class="log-section">
+                <h3>Training Log</h3>
+                <div id="training-log" class="log-container"></div>
+            </div>
         </div>
     </main>
 
@@ -101,13 +228,14 @@
                 gridcolor: 'rgba(204, 214, 246, 0.1)',
                 zerolinecolor: 'rgba(204, 214, 246, 0.1)',
                 title: 'Accuracy (%)',
-                range: [90, 100],  // Set fixed range from 90% to 100%
-                dtick: 1,  // Show tick marks every 1%
-                tickformat: '.1f',  // Show one decimal place
+                range: [0, 100],
+                dtick: 10,
+                tickformat: '.1f'
             }
         };
 
         let isUpdating = false;
+        let currentModelId = null;
 
         function showLoading() {
             $('.loading').addClass('active');
@@ -118,122 +246,253 @@
         }
 
         async function updatePlots() {
-            if (isUpdating) return;
-            isUpdating = true;
-            showLoading();
-
             try {
-                const response = await $.getJSON('/get_metrics');
-                const data = response;
-
-                // Update loss data
-                lossData.train = {
-                    x: data.train_loss.x,
-                    y: data.train_loss.y
-                };
-                lossData.val = {
-                    x: data.val_loss.x,
-                    y: data.val_loss.y
-                };
-
-                // Update accuracy data
-                accuracyData.train = {
-                    x: data.train_accuracy.x,
-                    y: data.train_accuracy.y
-                };
-                accuracyData.val = {
-                    x: data.val_accuracy.x,
-                    y: data.val_accuracy.y
-                };
+                // Get current training status
+                const statusResponse = await $.getJSON('/get_training_status');
                 
-                // Update current metrics
-                if (lossData.train.y.length > 0) {
-                    $('#current-loss').text(
-                        lossData.train.y[lossData.train.y.length - 1].toFixed(4)
-                    );
-                }
-                if (accuracyData.train.y.length > 0) {
-                    $('#current-accuracy').text(
-                        accuracyData.train.y[accuracyData.train.y.length - 1].toFixed(3) + '%'
-                    );
-                }
-                if (lossData.train.x.length > 0) {
-                    $('#current-epoch').text(
-                        Math.floor(lossData.train.x[lossData.train.x.length - 1] / 100)
-                    );
+                if (statusResponse.is_training) {
+                    // Get metrics data
+                    const metricsResponse = await $.getJSON('/get_metrics');
+                    
+                    // Update current metrics
+                    $('#current-epoch').text(statusResponse.current_epoch);
+                    $('#current-loss').text(statusResponse.current_loss.toFixed(4));
+                    $('#current-accuracy').text(statusResponse.current_accuracy.toFixed(2) + '%');
+                    
+                    // Update individual model metrics
+                    const modelId = statusResponse.current_model;
+                    $(`#epoch-model${modelId}`).text(statusResponse.current_epoch);
+                    $(`#loss-model${modelId}`).text(statusResponse.current_loss.toFixed(4));
+                    $(`#accuracy-model${modelId}`).text(statusResponse.current_accuracy.toFixed(2) + '%');
                 }
 
-                // Plot loss with original scale
-                await Plotly.newPlot('loss-plot', [
+                // Get comparison data for plots
+                const response = await $.getJSON('/get_comparison_data');
+                
+                // Create traces for both models
+                const lossTraces = [
                     {
-                        x: lossData.train.x,
-                        y: lossData.train.y,
-                        type: 'scatter',
-                        name: 'Training Loss',
-                        line: { color: '#64ffda', width: 2 }
+                        x: response.model1.train_loss.x,
+                        y: response.model1.train_loss.y,
+                        name: 'Model 1 Training',
+                        line: { color: '#64ffda' }
                     },
                     {
-                        x: lossData.val.x,
-                        y: lossData.val.y,
-                        type: 'scatter',
-                        name: 'Validation Loss',
-                        line: { color: '#ff6464', width: 2 }
+                        x: response.model2.train_loss.x,
+                        y: response.model2.train_loss.y,
+                        name: 'Model 2 Training',
+                        line: { color: '#ff6464' }
                     }
-                ], lossLayout);
+                ];
 
-                // Plot accuracy with zoomed scale (90-100%)
-                await Plotly.newPlot('accuracy-plot', [
+                const accuracyTraces = [
                     {
-                        x: accuracyData.train.x,
-                        y: accuracyData.train.y,
-                        type: 'scatter',
-                        name: 'Training Accuracy',
-                        line: { color: '#64ffda', width: 2 },
-                        hovertemplate: '%{y:.2f}%<extra></extra>'
+                        x: response.model1.train_accuracy.x,
+                        y: response.model1.train_accuracy.y,
+                        name: 'Model 1 Training',
+                        line: { color: '#64ffda' }
                     },
                     {
-                        x: accuracyData.val.x,
-                        y: accuracyData.val.y,
-                        type: 'scatter',
-                        name: 'Validation Accuracy',
-                        line: { color: '#ff6464', width: 2 },
-                        hovertemplate: '%{y:.2f}%<extra></extra>'
+                        x: response.model2.train_accuracy.x,
+                        y: response.model2.train_accuracy.y,
+                        name: 'Model 2 Training',
+                        line: { color: '#ff6464' }
                     }
-                ], accuracyLayout);
+                ];
+
+                // Update plots only if there's data
+                if (lossTraces.some(trace => trace.x.length > 0)) {
+                    Plotly.react('loss-plot', lossTraces, lossLayout);
+                }
+                if (accuracyTraces.some(trace => trace.x.length > 0)) {
+                    Plotly.react('accuracy-plot', accuracyTraces, accuracyLayout);
+                }
 
             } catch (error) {
                 console.error('Error updating plots:', error);
-            } finally {
-                isUpdating = false;
-                hideLoading();
             }
         }
 
-        async function updateLog() {
-            try {
-                const response = await $.getJSON('/get_log');
-                const logHtml = response.log.map(msg => 
-                    `<div class="log-entry">${msg}</div>`
-                ).join('');
-                $('#training-log').html(logHtml);
-                $('#training-log').scrollTop($('#training-log')[0].scrollHeight);
-            } catch (error) {
-                console.error('Error updating log:', error);
-            }
+        function updateMetrics() {
+            $.getJSON('/get_training_status', function(status) {
+                if (status.is_training) {
+                    console.log("Current metrics:", status);  // Debug print
+                    
+                    // Update current metrics
+                    $('#current-epoch').text(status.current_epoch);
+                    $('#current-loss').text(status.current_loss.toFixed(4));
+                    $('#current-accuracy').text(status.current_accuracy.toFixed(2) + '%');
+                    
+                    // Update model specific metrics
+                    const modelId = status.current_model;
+                    $(`#epoch-model${modelId}`).text(status.current_epoch);
+                    $(`#loss-model${modelId}`).text(status.current_loss.toFixed(4));
+                    $(`#accuracy-model${modelId}`).text(status.current_accuracy.toFixed(2) + '%');
+                }
+            });
         }
 
-        // Initial update
-        updatePlots();
-        updateLog();
+        function updateLog() {
+            $.get('/get_log', function(data) {
+                const logContainer = $('#training-log');
+                logContainer.html(''); // Clear existing logs
+                data.log.forEach(function(message) {
+                    logContainer.append(`<div class="log-entry">${message}</div>`);
+                });
+                // Auto-scroll to bottom
+                logContainer.scrollTop(logContainer[0].scrollHeight);
+            });
+        }
 
-        // Update every 2 seconds
-        setInterval(updatePlots, 2000);
-        setInterval(updateLog, 2000);
+        // Update more frequently
+        setInterval(updateMetrics, 100);  // Every 100ms
+        setInterval(updatePlots, 500);    // Every 500ms
+        setInterval(updateLog, 500);      // Every 500ms
+
+        // Start updates when document is ready
+        $(document).ready(function() {
+            // Event handler for Model 1
+            $('#train-model1').click(function() {
+                const config = {
+                    model_id: 1,
+                    channels: {
+                        layer1: parseInt($('#model1-l1').val()),
+                        layer2: parseInt($('#model1-l2').val()),
+                        layer3: parseInt($('#model1-l3').val()),
+                        layer4: parseInt($('#model1-l4').val())
+                    },
+                    batch_size: parseInt($('#model1-batch').val()),
+                    epochs: parseInt($('#model1-epochs').val())
+                };
+                startTraining(config, '#train-model1');
+            });
+
+            // Event handler for Model 2
+            $('#train-model2').click(function() {
+                const config = {
+                    model_id: 2,
+                    channels: {
+                        layer1: parseInt($('#model2-l1').val()),
+                        layer2: parseInt($('#model2-l2').val()),
+                        layer3: parseInt($('#model2-l3').val()),
+                        layer4: parseInt($('#model2-l4').val())
+                    },
+                    batch_size: parseInt($('#model2-batch').val()),
+                    epochs: parseInt($('#model2-epochs').val())
+                };
+                startTraining(config, '#train-model2');
+            });
+
+            function startTraining(config, buttonId) {
+                // Add optimizer settings to config
+                const modelNum = buttonId.slice(-1);
+                config.optimizer = {
+                    name: $(`#model${modelNum}-optimizer`).val(),
+                    learning_rate: parseFloat($(`#model${modelNum}-lr`).val())
+                };
+                
+                // Disable the clicked button during training
+                $(buttonId).prop('disabled', true).text('Training...');
+
+                $.ajax({
+                    url: '/start_training',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(config),
+                    success: function(response) {
+                        console.log('Training queued:', response);
+                    },
+                    error: function(error) {
+                        console.error('Error in training:', error);
+                        $(buttonId).prop('disabled', false).text(`Train Model ${config.model_id}`);
+                    }
+                });
+            }
+        });
 
         // Auto refresh page every 5 minutes
         setInterval(() => {
             window.location.reload();
         }, 300000);
+
+        function updateTrainingStatus() {
+            $.get('/get_training_status', function(data) {
+                console.log("Training status:", data);  // Debug print
+                
+                // Remove running class from all cards
+                $('.config-card').removeClass('running');
+                
+                if (data.is_training && data.current_model) {
+                    // Add running class to active model card
+                    $(`#train-model${data.current_model}`).closest('.config-card').addClass('running');
+                    
+                    // Update global status
+                    $('.status').text('Training in Progress');
+                    
+                    // Update current model's status
+                    const modelId = data.current_model;
+                    $(`#status-model${modelId}`)
+                        .text('Training')
+                        .addClass('training')
+                        .css('background-color', '#2a9d8f');
+                    
+                    // Keep other model's previous status
+                    const otherModelId = modelId === 1 ? 2 : 1;
+                    if ($(`#status-model${otherModelId}`).text() !== 'Completed') {
+                        $(`#status-model${otherModelId}`)
+                            .text('Not Started')
+                            .removeClass('training');
+                    }
+                    
+                    // Update metrics for current model
+                    $('#current-epoch').text(data.current_epoch);
+                    $('#current-loss').text(data.current_loss.toFixed(4));
+                    $('#current-accuracy').text(data.current_accuracy.toFixed(2) + '%');
+                    
+                    // Update individual model metrics
+                    $(`#epoch-model${modelId}`).text(data.current_epoch);
+                    $(`#loss-model${modelId}`).text(data.current_loss.toFixed(4));
+                    $(`#accuracy-model${modelId}`).text(data.current_accuracy.toFixed(2) + '%');
+                    
+                    // Update button states
+                    $(`#train-model${modelId}`).prop('disabled', true).text('Training...');
+                    $(`#train-model${otherModelId}`).prop('disabled', false);
+                } else {
+                    // When no training is in progress
+                    $('.status').text('Waiting for Training');
+                    
+                    // Check model states from their metrics
+                    $.getJSON('/get_comparison_data', function(modelData) {
+                        // Check Model 1
+                        if (modelData.model1.train_accuracy.y.length > 0) {
+                            $('#status-model1')
+                                .text('Completed')
+                                .removeClass('training')
+                                .css('background-color', '#264653');
+                        }
+                        
+                        // Check Model 2
+                        if (modelData.model2.train_accuracy.y.length > 0) {
+                            $('#status-model2')
+                                .text('Completed')
+                                .removeClass('training')
+                                .css('background-color', '#264653');
+                        }
+                    });
+                    
+                    // Enable all training buttons
+                    $('.train-btn').prop('disabled', false).each(function() {
+                        const modelNum = $(this).attr('id').slice(-1);
+                        $(this).text(`Train Model ${modelNum}`);
+                    });
+                }
+            }).fail(function(error) {
+                console.error("Error updating status:", error);
+            });
+        }
+
+        // Update more frequently
+        setInterval(updateTrainingStatus, 100);  // Every 100ms
     </script>
 </body>
 </html>
