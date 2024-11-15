@@ -20,13 +20,13 @@ A real-time visualization tool for training and comparing MNIST classification m
 ## Screenshots
 
 ### Real-time Training Interface
-![Training Interface](static/screenshots/interface.png)
-
+![Training Interface](static/image1.png)
+![Training Interface](static/image2.png)
 ### Model Comparison
-![Model Comparison](static/screenshots/comparison.png)
+![Model Comparison](static/image3.png)
 
 ### Live Metrics
-![Live Metrics](static/screenshots/metrics.png)
+![Live Metrics](static/image3.png)
 
 ## Requirements
 
