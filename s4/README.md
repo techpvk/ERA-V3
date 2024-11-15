@@ -1,33 +1,28 @@
-# MNIST Training Monitor
+# Neural Network Training Monitor
 
-A real-time visualization tool for monitoring MNIST digit classification training using a CNN implemented in PyTorch with Flask-based web interface.
+A real-time visualization tool for training and comparing MNIST classification models with different architectures and hyperparameters.
 
 ## Features
 
-- Real-time training metrics visualization
-- Live training log updates
-- Interactive plots for loss and accuracy
-- Final results visualization with sample predictions
-- Responsive web interface
+- Real-time training visualization
+- Concurrent model comparison
+- Customizable network architecture
+- Multiple optimizer support
+- Live metrics tracking
+- Interactive plots
+- Training logs
+- Modern UI with AI theme
 
 ## Requirements
 
 - Python 3.8+
 - PyTorch
 - Flask
-- Matplotlib
-- NumPy
-- Requests
-- tqdm
-- Plotly.js (included via CDN)
-- jQuery (included via CDN)
+- CUDA-capable GPU (optional, but recommended)
 
-## Portal UI
-![alt text](static/image1.png)
-![alt text](static/image2.png)
-## Installation & Setup
+## Installation
 
-1. Clone the repository: 
+1. Clone the repository:
 ```bash
 git clone [repository-url]
 cd mnist-training-monitor
