@@ -177,6 +177,7 @@ def start_training():
         channels = data['channels']
         batch_size = int(data.get('batch_size', 512))
         epochs = int(data.get('epochs', 1))
+        optimizer_config = data.get('optimizer', {'name': 'adam', 'learning_rate': 0.001})
         
         # Clear previous results for this model
         model_results[model_id] = {
@@ -191,12 +192,13 @@ def start_training():
             }
         }
         
-        # Queue the training request
+        # Queue the training request with optimizer config
         training_queue.put({
             'model_id': model_id,
             'channels': channels,
             'batch_size': batch_size,
-            'epochs': epochs
+            'epochs': epochs,
+            'optimizer_config': optimizer_config
         })
         
         return jsonify({

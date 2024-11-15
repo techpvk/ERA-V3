@@ -603,4 +603,25 @@ body::before {
 .running .training-info {
     background: rgba(42, 157, 143, 0.1);
     border: 1px solid rgba(100, 255, 218, 0.2);
+}
+
+.optimizer-select {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    padding: 0.5rem;
+    border: 1px solid rgba(100, 255, 218, 0.2);
+    border-radius: 4px;
+    width: 100%;
+    font-family: 'Fira Code', monospace;
+    cursor: pointer;
+}
+
+.optimizer-select:hover {
+    border-color: rgba(100, 255, 218, 0.4);
+}
+
+.optimizer-select option {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    padding: 0.5rem;
 } 

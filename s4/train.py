@@ -85,7 +85,7 @@ def update_metrics(iteration, loss, accuracy, model_id, message, is_validation=F
     except Exception as e:
         print(f"Failed to update server: {str(e)}")
 
-def train_model(model_id, channels, batch_size, epochs, results=None, training_log=None):
+def train_model(model_id, channels, batch_size, epochs, optimizer_config=None, results=None, training_log=None):
     """Train a single model with the specified configuration"""
     try:
         # Set device and log CUDA status
@@ -112,7 +112,24 @@ def train_model(model_id, channels, batch_size, epochs, results=None, training_l
         print(f"[Model {model_id}] Initializing model...")
         model = CNN(channels).to(device)
         criterion = nn.CrossEntropyLoss()
-        optimizer = optim.Adam(model.parameters(), lr=0.001)
+        
+        # Setup optimizer based on configuration
+        if optimizer_config is None:
+            optimizer_config = {'name': 'adam', 'learning_rate': 0.001}
+        
+        if optimizer_config['name'].lower() == 'sgd':
+            optimizer = optim.SGD(model.parameters(), 
+                                lr=optimizer_config['learning_rate'],
+                                momentum=0.9)
+        elif optimizer_config['name'].lower() == 'rmsprop':
+            optimizer = optim.RMSprop(model.parameters(), 
+                                    lr=optimizer_config['learning_rate'])
+        elif optimizer_config['name'].lower() == 'adagrad':
+            optimizer = optim.Adagrad(model.parameters(), 
+                                    lr=optimizer_config['learning_rate'])
+        else:  # default to Adam
+            optimizer = optim.Adam(model.parameters(), 
+                                 lr=optimizer_config['learning_rate'])
         
         best_accuracy = 0
         global_step = 0

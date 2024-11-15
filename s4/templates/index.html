@@ -74,6 +74,19 @@
                         <div class="config-group">
                             <h4>Training Parameters</h4>
                             <div class="input-group">
+                                <label for="model1-optimizer">Optimizer:</label>
+                                <select id="model1-optimizer" class="optimizer-select">
+                                    <option value="adam">Adam</option>
+                                    <option value="sgd">SGD</option>
+                                    <option value="rmsprop">RMSprop</option>
+                                    <option value="adagrad">Adagrad</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label for="model1-lr">Learning Rate:</label>
+                                <input type="number" id="model1-lr" value="0.001" min="0.0001" max="0.1" step="0.0001">
+                            </div>
+                            <div class="input-group">
                                 <label for="model1-batch">Batch Size:</label>
                                 <input type="number" id="model1-batch" value="512" min="32" max="1024" step="32">
                             </div>
@@ -121,6 +134,19 @@
                         <!-- Training Parameters -->
                         <div class="config-group">
                             <h4>Training Parameters</h4>
+                            <div class="input-group">
+                                <label for="model2-optimizer">Optimizer:</label>
+                                <select id="model2-optimizer" class="optimizer-select">
+                                    <option value="adam">Adam</option>
+                                    <option value="sgd">SGD</option>
+                                    <option value="rmsprop">RMSprop</option>
+                                    <option value="adagrad">Adagrad</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label for="model2-lr">Learning Rate:</label>
+                                <input type="number" id="model2-lr" value="0.001" min="0.0001" max="0.1" step="0.0001">
+                            </div>
                             <div class="input-group">
                                 <label for="model2-batch">Batch Size:</label>
                                 <input type="number" id="model2-batch" value="512" min="32" max="1024" step="32">
@@ -359,6 +385,13 @@
             });
 
             function startTraining(config, buttonId) {
+                // Add optimizer settings to config
+                const modelNum = buttonId.slice(-1);
+                config.optimizer = {
+                    name: $(`#model${modelNum}-optimizer`).val(),
+                    learning_rate: parseFloat($(`#model${modelNum}-lr`).val())
+                };
+                
                 // Disable the clicked button during training
                 $(buttonId).prop('disabled', true).text('Training...');
 
