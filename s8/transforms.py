@@ -13,7 +13,7 @@ def get_transforms(mean, std):
         A.CoarseDropout(
             max_holes=1, max_height=16, max_width=16,
             min_holes=1, min_height=16, min_width=16,
-            fill_value=0, p=0.5
+            fill_value=0, p=0.2
         ),
         A.Normalize(
             mean=mean,

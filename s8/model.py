@@ -21,35 +21,35 @@ class CIFAR10Net(nn.Module):
         
         # C1 Block
         self.conv1 = nn.Sequential(
-            nn.Conv2d(3, 32, kernel_size=3, padding=1),
-            nn.BatchNorm2d(32),
+            nn.Conv2d(3, 16, kernel_size=3, padding=1),
+            nn.BatchNorm2d(16),
             nn.ReLU()
         )
         
         # C2 Block with Depthwise Separable Conv
         self.conv2 = nn.Sequential(
-            DepthwiseSeparableConv(32, 64, kernel_size=3),
-            nn.BatchNorm2d(64),
+            DepthwiseSeparableConv(16, 32, kernel_size=3),
+            nn.BatchNorm2d(32),
             nn.ReLU()
         )
         
         # C3 Block with Dilated Conv
         self.conv3 = nn.Sequential(
-            nn.Conv2d(64, 128, kernel_size=3, padding=2, dilation=2),
-            nn.BatchNorm2d(128),
+            nn.Conv2d(32, 64, kernel_size=3, padding=2, dilation=2),
+            nn.BatchNorm2d(64),
             nn.ReLU()
         )
         
         # C4 Block with stride=2
         self.conv4 = nn.Sequential(
-            nn.Conv2d(128, 256, kernel_size=3, stride=2, padding=1),
-            nn.BatchNorm2d(256),
+            nn.Conv2d(64, 128, kernel_size=3, stride=2, padding=1),
+            nn.BatchNorm2d(128),
             nn.ReLU()
         )
         
         # Global Average Pooling and FC layer
         self.gap = nn.AdaptiveAvgPool2d(1)
-        self.fc = nn.Linear(256, 10)
+        self.fc = nn.Linear(128, 10)
 
     def forward(self, x):
         x = self.conv1(x)
@@ -57,7 +57,7 @@ class CIFAR10Net(nn.Module):
         x = self.conv3(x)
         x = self.conv4(x)
         x = self.gap(x)
-        x = x.view(-1, 256)
+        x = x.view(-1, 128)
         x = self.fc(x)
         return x 
 
