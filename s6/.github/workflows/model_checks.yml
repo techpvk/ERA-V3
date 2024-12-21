@@ -25,36 +25,37 @@ jobs:
         
     - name: Run Model Checks
       run: |
-        python -c "
-import torch
-from models.model1 import Net as Model1
+        python -c '
+        import torch
+        from models.model1 import Net as Model1
 
-def check_model(model_class, model_name):
-    model = model_class()
-    
-    # Check total parameters (should be less than 20k)
-    total_params = sum(p.numel() for p in model.parameters())
-    assert total_params < 20000, f'{model_name}: Total parameters ({total_params}) exceeds 20,000'
-    print(f'{model_name}: Total parameters: {total_params}')
-    
-    # Check for batch normalization
-    has_batchnorm = any(isinstance(m, torch.nn.BatchNorm2d) for m in model.modules())
-    assert has_batchnorm, f'{model_name}: No batch normalization layer found'
-    print(f'{model_name}: Has batch normalization')
-    
-    # Check for dropout
-    has_dropout = any(isinstance(m, torch.nn.Dropout) for m in model.modules())
-    assert has_dropout, f'{model_name}: No dropout layer found'
-    print(f'{model_name}: Has dropout')
-    
-    # Check for GAP or FC layer
-    has_gap = any(isinstance(m, torch.nn.AdaptiveAvgPool2d) for m in model.modules())
-    has_fc = any(isinstance(m, torch.nn.Linear) for m in model.modules())
-    assert has_gap or has_fc, f'{model_name}: Neither GAP nor FC layer found'
-    print(f'{model_name}: Has GAP or FC layer')
+        def check_model(model_class, model_name):
+            model = model_class()
+            
+            # Check total parameters (should be less than 20k)
+            total_params = sum(p.numel() for p in model.parameters())
+            assert total_params < 20000, f"{model_name}: Total parameters ({total_params}) exceeds 20,000"
+            print(f"{model_name}: Total parameters: {total_params}")
+            
+            # Check for batch normalization
+            has_batchnorm = any(isinstance(m, torch.nn.BatchNorm2d) for m in model.modules())
+            assert has_batchnorm, f"{model_name}: No batch normalization layer found"
+            print(f"{model_name}: Has batch normalization")
+            
+            # Check for dropout
+            has_dropout = any(isinstance(m, torch.nn.Dropout) for m in model.modules())
+            assert has_dropout, f"{model_name}: No dropout layer found"
+            print(f"{model_name}: Has dropout")
+            
+            # Check for GAP or FC layer
+            has_gap = any(isinstance(m, torch.nn.AdaptiveAvgPool2d) for m in model.modules())
+            has_fc = any(isinstance(m, torch.nn.Linear) for m in model.modules())
+            assert has_gap or has_fc, f"{model_name}: Neither GAP nor FC layer found"
+            print(f"{model_name}: Has GAP or FC layer")
 
-# Check all models
-for model_class, name in [(Model1, 'Model1')]:
-    print(f'\nChecking {name}...')
-    check_model(model_class, name)
-print('\nAll checks passed successfully!')" 
+        # Check all models
+        for model_class, name in [(Model1, "Model1")]:
+            print(f"\nChecking {name}...")
+            check_model(model_class, name)
+        print("\nAll checks passed successfully!")
+        ' 
